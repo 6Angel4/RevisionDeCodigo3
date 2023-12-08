@@ -1,63 +1,77 @@
-// Tenemos un li de productos
-
 const productos = [
-  {nombre: "Zapato negro", tipo: "zapato", color: "negro", img: "./taco-negro.jpg"},
-  {nombre: "Zapato azul", tipo: "zapato", color: "azul", img: "./taco-azul.jpg"},
-  {nombre: "Bota negra", tipo: "bota", color: "negro", img: "./bota-negra.jpg"},
-  {nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg"},
-  {nombre: "Zapato rojo", tipo: "zapato", color: "rojo", img: "./zapato-rojo.jpg"}
-]
+  {
+    nombre: "Zapato negro",
+    tipo: "zapato",
+    color: "negro",
+    img: "./taco-negro.jpg",
+  },
+  {
+    nombre: "Zapato azul",
+    tipo: "zapato",
+    color: "azul",
+    img: "./taco-azul.jpg",
+  },
+  {
+    nombre: "Bota negra",
+    tipo: "bota",
+    color: "negro",
+    img: "./bota-negra.jpg",
+  },
+  { nombre: "Bota azul", tipo: "bota", color: "azul", img: "./bota-azul.jpg" },
+  {
+    nombre: "Zapato rojo",
+    tipo: "zapato",
+    color: "rojo",
+    img: "./zapato-rojo.jpg",
+  },
+];
 
-const li = document.getElementsByName("lista-de-productos")
-const $i = document.querySelector('.input');
+const listaProductos = document.getElementById("lista-de-productos");
+const inputFiltro = document.querySelector(".input");
+//  ID del boton
+const botonDeFiltro = document.getElementById("filtrarButton");
 
-for (let i = 0; i < productos.length; i++) {
-  var d = document.createElement("div")
-  d.classList.add("producto")
+function displayProductos(productos) {
+  // Limpiar la lista antes de agregar elementos
+  listaProductos.innerHTML = "";
 
-  var ti = document.createElement("p")
-  ti.classList.add("titulo")
-  ti.textContent = productos[i].nombre
-  
-  var imagen = document.createElement("img");
-  imagen.setAttribute('src', productos[i].img);
-
-  d.appendChild(ti)
-  d.appendChild(imagen)
-
-  li.appendChild(d)
+  productos.forEach((producto) => {
+    const elementoProducto = crearElementoProducto(producto);
+    listaProductos.appendChild(elementoProducto);
+  });
 }
 
-displayProductos(productos)
-const botonDeFiltro = document.querySelector("button");
+function crearElementoProducto(producto) {
+  const elementoProducto = document.createElement("div");
+  elementoProducto.classList.add("producto");
 
-botonDeFiltro.onclick = function() {
-  while (li.firstChild) {
-    li.removeChild(li.firstChild);
-  }
+  const tituloProducto = document.createElement("p");
+  tituloProducto.classList.add("titulo");
+  tituloProducto.textContent = producto.nombre;
 
-  const texto = $i.value;
-  console.log(texto);
-  const productosFiltrados = filtrado(productos, texto );
+  const imagenProducto = document.createElement("img");
+  imagenProducto.setAttribute("src", producto.img);
 
-  for (let i = 0; i < productosFiltrados.length; i++) {
-    var d = document.createElement("div")
-    d.classList.add("producto")
-  
-    var ti = document.createElement("p")
-    ti.classList.add("titulo")
-    ti.textContent = productosFiltrados[i].nombre
-    
-    var imagen = document.createElement("img");
-    imagen.setAttribute('src', productosFiltrados[i].img);
-  
-    d.appendChild(ti)
-    d.appendChild(imagen)
-  
-    li.appendChild(d)
-  }
+  elementoProducto.appendChild(tituloProducto);
+  elementoProducto.appendChild(imagenProducto);
+
+  return elementoProducto;
 }
 
-const filtrado = (productos = [], texto) => {
-  return productos.filter(item => item.tipo.includes(texto) || item.color.includes(texto));
-}  
+function filtrarProductos() {
+  const textoFiltro = inputFiltro.value.trim().toLowerCase();
+  const productosFiltrados = filtrado(productos, textoFiltro);
+  displayProductos(productosFiltrados);
+}
+
+function filtrado(productos = [], texto) {
+  return productos.filter(
+    (item) => item.tipo.includes(texto) || item.color.includes(texto)
+  );
+}
+
+// Asignar la función de filtrado al hacer clic en el botón
+botonDeFiltro.onclick = filtrarProductos;
+
+// Mostrar todos los productos inicialmente
+displayProductos(productos);
